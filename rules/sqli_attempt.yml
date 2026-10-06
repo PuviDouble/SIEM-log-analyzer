@@ -1,0 +1,25 @@
+title: Web Application SQL Injection Attempt
+id: a942b01c-d788-4c10-b912-4011fa9b8812
+status: production
+description: Detects common SQL injection keywords and special character sequences in HTTP web request paths and query parameters.
+author: SIEM Sentinel Team
+date: 2026-10-05
+references:
+    - https://attack.mitre.org/techniques/T1190/
+tags:
+    - attack.initial_access
+    - attack.t1190
+logsource:
+    category: webserver
+    product: nginx
+detection:
+    keywords:
+        - "UNION SELECT"
+        - "' OR '1'='1"
+        - "' OR 1=1"
+        - "--"
+        - "INFORMATION_SCHEMA"
+        - "SLEEP("
+        - "BENCHMARK("
+    condition: keywords
+level: critical

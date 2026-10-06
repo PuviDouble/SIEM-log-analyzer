@@ -1,0 +1,20 @@
+title: SSH Brute Force Authentication Attempt
+id: 5f8a920b-22d1-4d1a-8c90-781e9f1a2340
+status: experimental
+description: Detects repeated failed login attempts over SSH within a short timeframe.
+author: SIEM Sentinel Team
+date: 2026-10-05
+references:
+    - https://attack.mitre.org/techniques/T1110/001/
+tags:
+    - attack.credential_access
+    - attack.t1110.001
+logsource:
+    category: authentication
+    product: linux
+detection:
+    selection:
+        event_type: "failed_login"
+        service: "sshd"
+    condition: selection
+level: high

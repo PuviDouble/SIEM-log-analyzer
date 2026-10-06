@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  siem-sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: siem-sentinel-app
+    ports:
+      - "8501:8501"
+    environment:
+      - ABUSEIPDB_API_KEY=${ABUSEIPDB_API_KEY}
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - REDIS_URL=redis://redis-cache:6379/0
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./rules:/app/rules
+      - ./soar_mitigation.sh:/app/soar_mitigation.sh
+    depends_on:
+      - redis-cache
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:7-alpine
+    container_name: siem-redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  redis-data:

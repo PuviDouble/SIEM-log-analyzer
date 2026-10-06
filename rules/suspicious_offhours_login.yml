@@ -1,0 +1,24 @@
+title: Privileged Account Login Outside Business Hours
+id: f991102e-9988-4433-2211-123456789abc
+status: experimental
+description: Detects successful login events for root or admin users occurring outside expected work hours (e.g. 00:00 to 05:00 UTC).
+author: SIEM Sentinel Team
+date: 2026-10-05
+references:
+    - https://attack.mitre.org/techniques/T1078/
+tags:
+    - attack.initial_access
+    - attack.t1078
+logsource:
+    category: authentication
+    product: linux
+detection:
+    selection:
+        event_type: "successful_login"
+        user:
+            - "root"
+            - "admin"
+            - "administrator"
+        is_off_hours: true
+    condition: selection
+level: medium

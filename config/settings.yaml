@@ -1,0 +1,45 @@
+# SIEM Sentinel - Core Configuration File
+
+siem:
+  name: "SentinelSIEM Engine v2.0"
+  log_source_dir: "./logs"
+  db_path: "./data/siem_sentinel.db"
+  cache_db_path: "./data/threat_intel_cache.db"
+
+threat_intelligence:
+  abuseipdb:
+    enabled: true
+    api_key: ""  # Set via environment variable ABUSEIPDB_API_KEY or here
+    confidence_threshold: 50 # Flag if abuse confidence > 50%
+  virustotal:
+    enabled: true
+    api_key: ""  # Set via environment variable VIRUSTOTAL_API_KEY or here
+  cache:
+    backend: "sqlite" # 'sqlite' or 'redis'
+    redis_url: "redis://localhost:6379/0"
+    ttl_hours: 24
+
+soar_playbooks:
+  auto_block_ip:
+    enabled: true
+    min_severity: "CRITICAL" # LOW, MEDIUM, HIGH, CRITICAL
+    min_abuse_score: 75
+    mitigation_script_output: "./soar_mitigation.sh"
+  webhooks:
+    discord_url: "" # Set via DISCORD_WEBHOOK_URL or here
+    slack_url: ""   # Set via SLACK_WEBHOOK_URL or here
+    alert_on_severity: ["HIGH", "CRITICAL"]
+
+ml_anomaly_detection:
+  contamination: 0.05  # Expected percentage of anomalous traffic (5%)
+  min_samples_to_train: 30
+  features:
+    - "request_length"
+    - "bytes_sent"
+    - "param_entropy"
+    - "request_freq_per_min"
+    - "is_off_hours"
+    - "status_code"
+
+sigma:
+  rules_dir: "./rules"

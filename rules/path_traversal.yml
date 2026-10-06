@@ -1,0 +1,26 @@
+title: Directory Path Traversal Attempt
+id: c1b9032d-ef34-4b51-901a-8991209b11ef
+status: production
+description: Detects directory path traversal attempts (../ or URL encoded equivalents) aimed at accessing sensitive files like /etc/passwd.
+author: SIEM Sentinel Team
+date: 2026-10-05
+references:
+    - https://attack.mitre.org/techniques/T1190/
+tags:
+    - attack.initial_access
+    - attack.t1190
+logsource:
+    category: webserver
+    product: apache
+detection:
+    selection:
+        url|contains:
+            - "../"
+            - "..\\"
+            - "%2e%2e%2f"
+            - "%2e%2e/"
+            - "/etc/passwd"
+            - "boot.ini"
+            - "win.ini"
+    condition: selection
+level: high
